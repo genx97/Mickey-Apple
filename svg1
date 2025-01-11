@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mickey Mouse SVG Clock</title>
+    <style>
+        body {
+            background: #000;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .clock-container {
+            width: 500px;
+            height: 500px;
+            position: relative;
+        }
+
+        .clock {
+            width: 100%;
+            height: 100%;
+        }
+
+        .clock-face {
+            fill: none;
+        }
+
+        .clock-numbers {
+            fill: #fff;
+            font-size: 36px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+
+        .mickey-body {
+            fill: #000;
+        }
+
+        .mickey-face {
+            fill: #FFE4C4;
+        }
+
+        .mickey-shorts {
+            fill: #FF0000;
+        }
+
+        .mickey-shoes {
+            fill: #FFD700;
+        }
+
+        .mickey-gloves {
+            fill: #FFFFFF;
+        }
+
+        .hands {
+            transform-origin: center;
+            transition: transform 0.1s cubic-bezier(0.4, 2.08, 0.55, 0.44);
+        }
+    </style>
+</head>
+<body>
+    <div class="clock-container">
+        <svg class="clock" viewBox="0 0 500 500">
+            <!-- Clock face background -->
+            <circle cx="250" cy="250" r="240" fill="black"/>
+            <circle cx="250" cy="250" r="230" fill="none" stroke="#333" stroke-width="2"/>
+            
+            <!-- Clock numbers -->
+            <text class="clock-numbers" x="250" y="60">12</text>
+            <text class="clock-numbers" x="370" y="120">1</text>
+            <text class="clock-numbers" x="430" y="250">3</text>
+            <text class="clock-numbers" x="370" y="380">5</text>
+            <text class="clock-numbers" x="250" y="440">6</text>
+            <text class="clock-numbers" x="130" y="380">7</text>
+            <text class="clock-numbers" x="70" y="250">9</text>
+            <text class="clock-numbers" x="130" y="120">11</text>
+
+            <!-- Mickey Mouse body -->
+            <g transform="translate(250, 250)">
+                <!-- Body base -->
+                <g id="mickey-static">
+                    <!-- Head and ears -->
+                    <circle class="mickey-body" cx="0" cy="0" r="50"/>
+                    <circle class="mickey-body" cx="-45" cy="-45" r="30"/>
+                    <circle class="mickey-body" cx="45" cy="-45" r="30"/>
+                    
+                    <!-- Face -->
+                    <path class="mickey-face" d="M-20,-10 Q0,-20 20,-10 Q0,20 -20,-10"/>
+                    
+                    <!-- Nose -->
+                    <ellipse class="mickey-body" cx="0" cy="-5" rx="12" ry="8"/>
+                    
+                    <!-- Shorts -->
+                    <path class="mickey-shorts" d="M-30,20 Q0,40 30,20 L35,50 Q0,70 -35,50 Z"/>
+                    
+                    <!-- Shoes -->
+                    <path class="mickey-shoes" d="M-35,50 L-40,70 Q-30,80 -20,70 L-25,50 Z"/>
+                    <path class="mickey-shoes" d="M35,50 L40,70 Q30,80 20,70 L25,50 Z"/>
+                </g>
+
+                <!-- Hour hand (left arm) -->
+                <g id="hour-hand" class="hands">
+                    <path class="mickey-body" d="M-20,0 L-90,0 Q-100,0 -100,-10 L-90,-10 Q-85,-10 -80,0 Z"/>
+                    <circle class="mickey-gloves" cx="-95" cy="-5" r="12"/>
+                </g>
+
+                <!-- Minute hand (right arm) -->
+                <g id="minute-hand" class="hands">
+                    <path class="mickey-body" d="M20,0 L110,0 Q120,0 120,-10 L110,-10 Q105,-10 100,0 Z"/>
+                    <circle class="mickey-gloves" cx="115" cy="-5" r="12"/>
+                </g>
+            </g>
+        </svg>
+    </div>
+
+    <script>
+        const hourHand = document.getElementById('hour-hand');
+        const minuteHand = document.getElementById('minute-hand');
+
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours() % 12;
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+
+            // Calculate angles
+            const hourAngle = (360 / 12) * hours + (360 / 12 / 60) * minutes;
+            const minuteAngle = (360 / 60) * minutes + (360 / 60 / 60) * seconds;
+
+            // Update hand rotations
+            hourHand.style.transform = `rotate(${hourAngle}deg)`;
+            minuteHand.style.transform = `rotate(${minuteAngle}deg)`;
+        }
+
+        // Update immediately and then every second
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+</html>

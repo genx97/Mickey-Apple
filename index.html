@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mickey Mouse Real-Time Clock</title>
+    <style>
+        body {
+            background: #000;
+        }
+
+        #watch {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(grey, black 70%);
+            color: #fff;
+            font: bold 30px Arial, sans-serif;
+        }
+
+        .digit {
+            position: absolute;
+            width: 104%;
+            height: 104%;
+            margin: -2%;
+            text-align: center;
+        }
+
+        .digit span {
+            display: block;
+        }
+
+        /* Generate rotations for clock digits */
+        .digit:nth-child(1) { transform: rotate(30deg); }
+        .digit:nth-child(1) span { transform: rotate(-30deg); }
+        .digit:nth-child(2) { transform: rotate(60deg); }
+        .digit:nth-child(2) span { transform: rotate(-60deg); }
+        .digit:nth-child(3) { transform: rotate(90deg); }
+        .digit:nth-child(3) span { transform: rotate(-90deg); }
+        .digit:nth-child(4) { transform: rotate(120deg); }
+        .digit:nth-child(4) span { transform: rotate(-120deg); }
+        .digit:nth-child(5) { transform: rotate(150deg); }
+        .digit:nth-child(5) span { transform: rotate(-150deg); }
+        .digit:nth-child(6) { transform: rotate(180deg); }
+        .digit:nth-child(6) span { transform: rotate(-180deg); }
+        .digit:nth-child(7) { transform: rotate(210deg); }
+        .digit:nth-child(7) span { transform: rotate(-210deg); }
+        .digit:nth-child(8) { transform: rotate(240deg); }
+        .digit:nth-child(8) span { transform: rotate(-240deg); }
+        .digit:nth-child(9) { transform: rotate(270deg); }
+        .digit:nth-child(9) span { transform: rotate(-270deg); }
+        .digit:nth-child(10) { transform: rotate(300deg); }
+        .digit:nth-child(10) span { transform: rotate(-300deg); }
+        .digit:nth-child(11) { transform: rotate(330deg); }
+        .digit:nth-child(11) span { transform: rotate(-330deg); }
+        .digit:nth-child(12) { transform: rotate(360deg); }
+        .digit:nth-child(12) span { transform: rotate(-360deg); }
+
+        #mickey,
+        #hours,
+        #minutes {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background: no-repeat center center;
+            background-size: contain;
+            transition: transform 0.1s cubic-bezier(0.4, 2.08, 0.55, 0.44);
+        }
+
+        #mickey {
+            background-size: 70%;
+            background-position: 45% 85%;
+            z-index: 50;
+        }
+
+        #hours,
+        #minutes,
+        #minutes:after {
+            position: absolute;
+        }
+
+        /* Adding clock hands design */
+        #hours {
+            background: linear-gradient(180deg, transparent 50%, #fff 50%, #fff 53%, transparent 53%);
+            height: 45%;
+            top: 25%;
+        }
+
+        #minutes {
+            background: linear-gradient(180deg, transparent 50%, #fff 50%, #fff 52%, transparent 52%);
+            height: 55%;
+            top: 20%;
+        }
+    </style>
+</head>
+<body>
+    <div id="watch">
+        <div class="digit"><span>1</span></div>
+        <div class="digit"><span>2</span></div>
+        <div class="digit"><span>3</span></div>
+        <div class="digit"><span>4</span></div>
+        <div class="digit"><span>5</span></div>
+        <div class="digit"><span>6</span></div>
+        <div class="digit"><span>7</span></div>
+        <div class="digit"><span>8</span></div>
+        <div class="digit"><span>9</span></div>
+        <div class="digit"><span>10</span></div>
+        <div class="digit"><span>11</span></div>
+        <div class="digit"><span>12</span></div>
+        <div id="mickey"></div>
+        <div id="hours" class="left"></div>
+        <div id="minutes" class="right"></div>
+    </div>
+
+    <script>
+        var $hours = document.getElementById('hours');
+        var $minutes = document.getElementById('minutes');
+
+        function updateClock() {
+            var now = new Date();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var seconds = now.getSeconds();
+
+            // Convert hours to 12-hour format
+            hours = hours % 12;
+            hours = hours ? hours : 12; // If hours is 0, make it 12
+
+            // Calculate the angles
+            // Hours hand moves 30 degrees per hour (360 / 12) plus a small increment for minutes
+            var hoursAngle = (hours * 30) + (minutes / 2);
+            // Minutes hand moves 6 degrees per minute (360 / 60)
+            var minutesAngle = minutes * 6;
+
+            // Update hand positions
+            if (hours >= 6 && hours < 12) {
+                $hours.className = 'left';
+            } else {
+                $hours.className = 'right';
+            }
+
+            if (minutes <= 30) {
+                $minutes.className = 'back left';
+            } else {
+                $minutes.className = 'left';
+            }
+
+            set($hours, hoursAngle);
+            set($minutes, minutesAngle);
+        }
+
+        function set($elmt, deg) {
+            if ($elmt.id === 'hours' && deg < 180) {
+                deg = deg - 5;
+            }
+
+            if ($elmt.id === 'minutes' && deg < 180) {
+                deg = deg + 5;
+            } else {
+                deg = deg - 5;
+            }
+
+            $elmt.style.transform = 'rotate(' + deg + 'deg)';
+            $elmt.style.webkitTransform = 'rotate(' + deg + 'deg)';
+        }
+
+        // Update clock immediately
+        updateClock();
+
+        // Update clock every second
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+</html>
